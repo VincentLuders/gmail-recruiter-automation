@@ -215,11 +215,15 @@ function initializeContentScript() {
                     throw new Error('No email thread content extracted');
                 }
                 const prompt = await processPrompt(emailThread);
+                console.log('📤 Sending message to background script...');
                 const response = await chrome.runtime.sendMessage({
                     action: 'generateResponse',
                     prompt: prompt
                 });
+                console.log('📥 Received response from background:', typeof response, response?.substring(0, 100) + '...');
+                
                 if (typeof response === 'string' && response.startsWith('Error:')) {
+                    console.error('❌ Error response received:', response);
                     throw new Error(response);
                 }
                 await findAndInsertResponse(response);
