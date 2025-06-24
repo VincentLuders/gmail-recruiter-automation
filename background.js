@@ -1,5 +1,24 @@
 ﻿  // background.js
-  console.log('Background script loaded');
+console.log('Background script loaded');
+
+// Try to load local config, fall back to placeholder
+let API_KEY = 'YOUR_ANTHROPIC_API_KEY_HERE';
+
+// Try to import local config if it exists
+async function loadConfig() {
+    try {
+        const configModule = await import('./config.js');
+        if (configModule.CONFIG && configModule.CONFIG.ANTHROPIC_API_KEY) {
+            API_KEY = configModule.CONFIG.ANTHROPIC_API_KEY;
+            console.log('Local config loaded successfully');
+        }
+    } catch (e) {
+        console.log('Local config not found, using placeholder API key');
+    }
+}
+
+// Load config when background script starts
+loadConfig();
   
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (request.action === 'generateResponse') {
@@ -24,7 +43,7 @@
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
-                  'x-api-key': 'YOUR_ANTHROPIC_API_KEY_HERE',
+                  'x-api-key': API_KEY,
                   'anthropic-version': '2023-06-01',
                   'anthropic-dangerous-direct-browser-access': 'true'
               },
