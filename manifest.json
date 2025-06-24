@@ -1,0 +1,32 @@
+﻿{
+    "manifest_version": 3,
+    "name": "Gmail AI Assistant",
+    "version": "1.0",
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "activeTab",
+        "clipboard-read",
+        "storage"
+    ],
+    "host_permissions": [
+        "https://api.anthropic.com/*",
+        "https://mail.google.com/*",
+        "https://app.rogerroger.io/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://mail.google.com/*",
+                "https://app.rogerroger.io/*"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ],
+    "background": {
+        "service_worker": "background.js"
+    }
+}

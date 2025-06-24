@@ -1,0 +1,47 @@
+﻿  <!DOCTYPE html>
+  <html>
+  
+  <head>
+      <style>
+          body {
+              width: 500px;
+              padding: 10px;
+          }
+  
+          textarea {
+              width: 100%;
+              height: 300px;
+              margin-bottom: 10px;
+          }
+  
+          #saveStatus {
+              color: green;
+              display: none;
+          }
+  
+          .placeholders {
+              font-size: 12px;
+              color: #666;
+              margin-bottom: 10px;
+          }
+      </style>
+  </head>
+  
+  <body>
+      <h3>Custom Prompt Editor</h3>
+      <div class="placeholders">
+          Available placeholders:
+          <br>{Chat} - Will be replaced with the email thread content
+          <br>{time} - Current time (e.g., 14:38)
+          <br>{date} - Current date (e.g., 20.01.2025)
+          <br>{day} - Current day (e.g., Monday)
+      </div>
+      <textarea id="promptEditor"
+          placeholder="Enter your custom prompt here. Use placeholders like {Chat} to include email content."></textarea>
+      <button id="savePrompt">Save</button>
+      <span id="saveStatus">Saved!</span>
+      <button id="reloadScript">Reload Content Script</button>
+      <script src="popup.js"></script>
+  </body>
+  
+  </html>
