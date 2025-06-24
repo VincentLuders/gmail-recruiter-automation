@@ -4,24 +4,32 @@ console.log('Background script loaded');
 // Try to load local config, fall back to placeholder
 let API_KEY = 'YOUR_ANTHROPIC_API_KEY_HERE';
 
-// Try to import local config if it exists
+// Try to load config using fetch (more reliable for service workers)
 async function loadConfig() {
     try {
-        const configModule = await import('./config.js');
-        if (configModule.CONFIG && configModule.CONFIG.ANTHROPIC_API_KEY) {
-            API_KEY = configModule.CONFIG.ANTHROPIC_API_KEY;
+        console.log('🔄 Attempting to load config...');
+        const response = await fetch(chrome.runtime.getURL('config.js'));
+        const configText = await response.text();
+        
+        // Extract the API key from the config file content
+        const match = configText.match(/ANTHROPIC_API_KEY:\s*['"`]([^'"`]+)['"`]/);
+        if (match && match[1]) {
+            API_KEY = match[1];
             console.log('✅ Local config loaded successfully');
             console.log('🔑 API Key loaded:', API_KEY.substring(0, 20) + '...' + API_KEY.substring(API_KEY.length - 4));
         } else {
-            console.log('❌ Config file found but no API key in it');
+            console.log('❌ Config file found but no API key extracted');
+            console.log('📝 Config content preview:', configText.substring(0, 200));
         }
     } catch (e) {
         console.log('❌ Local config not found, using placeholder API key');
         console.error('Config loading error:', e);
+        console.log('🔑 Current API Key:', API_KEY.substring(0, 20) + '...' + API_KEY.substring(API_KEY.length - 4));
     }
 }
 
 // Load config when background script starts
+console.log('🚀 Background script starting...');
 loadConfig();
   
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
